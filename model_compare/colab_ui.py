@@ -1,5 +1,4 @@
 """Gradio classroom apps. Credentials are used only before the UI starts."""
-import getpass
 import inspect
 import json
 import tempfile
@@ -26,11 +25,29 @@ h1,h2,h3 {letter-spacing:-.03em;}
 """
 
 
-def prompt_snapshot():
-    """Never save the key to a file, environment variable, UI state, or output."""
-    key = getpass.getpass("Artificial Analysis API key (AA_API_KEY): ").strip()
+def load_colab_snapshot():
+    """Read AA_API_KEY from Colab Secrets without copying it into app state."""
     try:
-        snapshot = fetch_artificial_analysis(key)
+        from google.colab import userdata
+    except ImportError:
+        print("Open this notebook in Google Colab to use AA_API_KEY from Secrets.")
+        return None
+    try:
+        key = userdata.get("AA_API_KEY")
+    except userdata.SecretNotFoundError:
+        print("Add AA_API_KEY in Colab's Secrets panel (key icon), enable Notebook access, then rerun this cell.")
+        return None
+    except userdata.NotebookAccessError:
+        print("Enable Notebook access for AA_API_KEY in Colab's Secrets panel, then rerun this cell.")
+        return None
+    except Exception:
+        print("Could not read Colab Secrets. Check the runtime connection and Notebook access, then rerun this cell.")
+        return None
+    try:
+        if not isinstance(key, str) or not key.strip():
+            print("AA_API_KEY is empty. Set its value in Colab Secrets, then rerun this cell.")
+            return None
+        snapshot = fetch_artificial_analysis(key.strip())
     except Exception:
         # Suppress request objects, response bodies and notebook traceback locals.
         print("Could not load AA data. Check your key, API access/quota and connection, then rerun this cell.")
@@ -39,6 +56,10 @@ def prompt_snapshot():
         key = ""
     print(f"Loaded {len(snapshot['models'])} models · {snapshot['retrieved_at']}")
     return snapshot
+
+
+# Earlier notebook copies also use Secrets when they download the updated code.
+prompt_snapshot = load_colab_snapshot
 
 
 def build_task(slugs, inp, out, quality, ttft, cost, objective, weights, first=None, end=None):
@@ -126,7 +147,7 @@ def similarity_outputs(snapshot, slug, features, minimum, inp, out):
 
 def build_app(snapshot, agent=False):
     if snapshot is None:
-        raise ValueError("Run the AA API key cell successfully before starting the app.")
+        raise ValueError("Run the AA data cell successfully before starting the app.")
     choices = [(f"{m['name']} · {m['slug']}", m["slug"]) for m in snapshot["models"]]
     rows = core.comparison_rows(snapshot, [m["slug"] for m in snapshot["models"]], 100_000, 20_000)
     complete = [r for r in rows if all(core.has_measurement(r.get(f)) for f in ("quality", "cost_usd", "ttft_s"))]
@@ -232,7 +253,7 @@ def build_app(snapshot, agent=False):
                         "Then find alternatives similar in cost and TTFT, and test your shortlist on real project examples.")
         gr.DownloadButton("Download this AA snapshot", value=str(snapshot_file))
         gr.Markdown("Data: [Artificial Analysis](https://artificialanalysis.ai). Benchmarks guide a shortlist; they do not replace project evaluation. "
-                    "To refresh data, rerun the API key cell and then relaunch the app.")
+                    "To refresh data, rerun the AA data cell and then relaunch the app.")
     return app
 
 

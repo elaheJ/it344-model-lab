@@ -10,7 +10,7 @@ Both hosted apps include model data and similarity search. Students need no Arti
 
 **[Colab · Compare (no agent)](https://colab.research.google.com/github/elaheJ/it344-model-lab/blob/main/colab/Model_Lab_Compare.ipynb)** · **[Colab · Agent](https://colab.research.google.com/github/elaheJ/it344-model-lab/blob/main/colab/Model_Lab_Agent.ipynb)**
 
-Save a copy in Drive, choose **Runtime → Run all**, and enter **your own AA_API_KEY** in the hidden prompt. Both notebooks fetch fresh data and open a Gradio app with ranking, composite metrics, similarity search, and downloads. The agent runs Qwen in your runtime without a separate LLM key; choose a T4 GPU before running it. Keep Colab connected while using the app. The temporary app link serves the snapshot and analysis; anyone with the link can open it.
+Save a copy in Drive. In Colab’s **Secrets** panel (key icon), add **AA_API_KEY** and enable **Notebook access**. Then choose **Runtime → Run all**; the notebooks read the key from Secrets automatically. Both notebooks fetch fresh data and open a Gradio app with ranking, composite metrics, similarity search, and downloads. The agent runs Qwen in your runtime without a separate LLM key; choose a T4 GPU before running it. Keep Colab connected while using the app. The temporary app link serves the snapshot and analysis; anyone with the link can open it.
 
 ## Run on your computer
 
