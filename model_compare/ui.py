@@ -312,7 +312,7 @@ def learning_panel(baseline):
                      core.record_trace, core.check_recommendation]
         selected = st.selectbox("Inspect a function", range(10), format_func=lambda i: f"Q{i+1} · {functions[i].__name__}")
         st.code(inspect.getsource(functions[selected]), language="python")
-        st.caption("Q6 preserves the original cost/latency choices. rank_models adds other objectives; the agent additionally checks numeric evidence. Tests and maintenance tools are in the developer repository: https://github.com/elaheJ/it344-model-lab-dev")
+        st.caption("Q6 preserves the original cost/latency choices. rank_models adds other objectives; the agent additionally checks numeric evidence. Tests and maintenance tools are in the developer repository: https://github.com/elaheJ/ai-model-comparison-using-artificial-analysis-dev")
         st.write(f"Direct Python workflow · {baseline['tool_calls']} calls")
         st.json(baseline["trace"])
 

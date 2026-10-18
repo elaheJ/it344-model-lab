@@ -39,4 +39,4 @@ For the agent app, run `python -m streamlit run agent_app.py`. Choose **Scripted
 
 **Using the apps:** choose **Rank models** for single or combined metrics, or **Find similar models** to select a reference model and features. Data is a dated snapshot; use your own project examples to evaluate the models you shortlist.
 
-Tests, maintenance scripts, hosting/key setup, and detailed documentation live in the **[developer repository](https://github.com/elaheJ/it344-model-lab-dev)**.
+Tests, maintenance scripts, hosting/key setup, and detailed documentation live in the **[developer repository](https://github.com/elaheJ/ai-model-comparison-using-artificial-analysis-dev)**.
