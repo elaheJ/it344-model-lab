@@ -1,50 +1,35 @@
-# Model Lab
+# Model Lab for IT344
 
-Two simple Streamlit apps for choosing language models for applied projects. Compare cost, response time, speed, and quality—or find alternatives similar to a model you already use.
+Compare language models for your project by cost, speed, response time, and quality. Find alternatives similar to a model you already use.
 
 **[Open Model Lab](https://it344-model-lab.streamlit.app/)** · **[Open Model Lab · Agent](https://it344-model-agent.streamlit.app/)**
 
-Both include a 704-model Artificial Analysis snapshot. Students need no AA API key. An instructor can enable automatic data refresh. The agent adds a tool workflow whose result is checked by Python; actual AI runs need a local model or configured provider.
+Both apps include model data and similarity search. Students need no Artificial Analysis API key.
 
-## Run locally
+## Run on your computer
 
-Use Python 3.12. In a terminal:
+Download this repository with **Code → Download ZIP**, unzip it, and open a terminal in that folder. Use Python 3.12:
 
 ```bash
-git clone https://github.com/elaheJ/it344-model-lab.git
-cd it344-model-lab
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -e .
+python -m venv .venv
+```
+
+Activate it: `source .venv/bin/activate` on macOS/Linux, or `.venv\Scripts\Activate.ps1` in Windows PowerShell. Use `python3` instead of `python` above if needed.
+
+```bash
+python -m pip install -r requirements.txt
 python -m streamlit run python_app.py
 ```
 
-Windows: use `py -3.12 -m venv .venv` and `.venv\Scripts\Activate.ps1` for the environment steps. In GitHub Codespaces, dependencies are installed automatically; run only the last command.
+For the agent app, run `python -m streamlit run agent_app.py`. Choose **Scripted rehearsal (no LLM)** to explore its workflow without a download. To run actual local AI, follow **Controller settings → Local model setup** in the app; it downloads roughly 3 GB and needs no LLM API key.
 
-Open the local URL printed in the terminal. Choose **Rank models** for single-metric or weighted comparisons, or **Find similar models** to pick a reference model and one or more features.
+## Explore the code
 
-For the agent interface, run `python -m streamlit run agent_app.py`. Select **Scripted rehearsal (no LLM)** to explore it without a model download. For actual AI, follow [agent setup](docs/setup.md#agent-model).
+- `python_app.py` and `agent_app.py` start the two apps.
+- `model_compare/core.py` contains the ten notebook functions, ranking, cost, and similarity calculations.
+- `model_compare/ui.py` contains the interface; `model_compare/agent.py` checks the agent's work.
+- Other files in `model_compare/` load data or run the local model. `cloud_agent_app.py` is the launcher used by the hosted agent.
 
-## Work on the code
+**Using the apps:** choose **Rank models** for single or combined metrics, or **Find similar models** to select a reference model and features. Data is a dated snapshot; use your own project examples to evaluate the models you shortlist.
 
-| What you want to change | Start here |
-| --- | --- |
-| Layout, labels, and controls | [model_compare/ui.py](model_compare/ui.py) |
-| Ranking, costs, similarity, and the notebook's ten functions | [model_compare/core.py](model_compare/core.py) |
-| Agent tools and result checks | [model_compare/agent.py](model_compare/agent.py) |
-| Snapshot format and AA downloads | [model_compare/snapshots.py](model_compare/snapshots.py) |
-| Automatic data refresh | [model_compare/live_data.py](model_compare/live_data.py) |
-| Expected behavior | [tests/](tests/) |
-
-The three small launch files share the same code: `python_app.py` starts the comparison app, `agent_app.py` starts the local agent, and `cloud_agent_app.py` starts the agent on Streamlit Cloud.
-
-After making a change:
-
-```bash
-python -m pip install -e ".[dev]"
-python -m pytest -q
-```
-
-GitHub runs these checks on every push. Keep keys in Streamlit Secrets or your environment; never commit them.
-
-**More detail:** [Hosting, keys, and local models](docs/setup.md) · [Data formats and scoring methods](docs/reference.md) · [Example comparison task](examples/task.json)
+Tests, maintenance scripts, hosting/key setup, and detailed documentation live in the **[developer repository](https://github.com/elaheJ/it344-model-lab-dev)**.

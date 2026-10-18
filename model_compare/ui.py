@@ -250,7 +250,7 @@ def agent_panel(snapshot, task, cloud=False):
         if provider.startswith("Local"):
             st.caption("Uses Qwen2.5-1.5B-Instruct on this computer. First run downloads about 3 GB; CPU generation may be slow. Install the optional local-model requirements first.")
             with st.expander("Local model setup"):
-                st.code('python -m pip install -e ".[local]"', language="bash")
+                st.code('python -m pip install "transformers==4.57.6" "torch>=2.6,<3" "safetensors>=0.4,<1"', language="bash")
                 st.caption("The Python app and scripted rehearsal do not need these packages. A GPU is optional. Model downloads and generation start only when you press Run.")
         elif provider == "Ollama":
             model = st.text_input("Installed Ollama model", value="qwen2.5:1.5b")
@@ -274,7 +274,7 @@ def agent_panel(snapshot, task, cloud=False):
                 # Preflight avoids a cryptic failure for a missing optional installation.
                 import importlib.util
                 if not all(importlib.util.find_spec(p) for p in ("torch", "transformers", "safetensors")):
-                    raise ValueError('Install the local model dependencies with pip install -e ".[local]", then restart the app.')
+                    raise ValueError('Open Controller settings → Local model setup, install the listed packages, then restart the app.')
                 controller = local_controller
             elif provider == "Ollama":
                 controller = http_controller("ollama", model, base_url=settings("OLLAMA_HOST", "http://localhost:11434"))
@@ -312,7 +312,7 @@ def learning_panel(baseline):
                      core.record_trace, core.check_recommendation]
         selected = st.selectbox("Inspect a function", range(10), format_func=lambda i: f"Q{i+1} · {functions[i].__name__}")
         st.code(inspect.getsource(functions[selected]), language="python")
-        st.caption("Q6 preserves the original cost/latency choices. rank_models adds other objectives; the agent additionally checks numeric evidence. Source and tests are included in the repository.")
+        st.caption("Q6 preserves the original cost/latency choices. rank_models adds other objectives; the agent additionally checks numeric evidence. Tests and maintenance tools are in the developer repository: https://github.com/elaheJ/it344-model-lab-dev")
         st.write(f"Direct Python workflow · {baseline['tool_calls']} calls")
         st.json(baseline["trace"])
 
