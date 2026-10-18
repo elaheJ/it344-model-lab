@@ -1,4 +1,4 @@
-# Model Lab for IT344
+# AI Model Comparison using Artificial Analysis
 
 Compare language models for your project by cost, speed, response time, and quality. Find alternatives similar to a model you already use.
 
